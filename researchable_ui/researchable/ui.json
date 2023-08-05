@@ -1,0 +1,464 @@
+{
+    "metadata": {
+        "streamsync_version": "0.1.10"
+    },
+    "components": {
+        "root": {
+            "id": "root",
+            "type": "root",
+            "content": {
+                "appName": "My App"
+            },
+            "parentId": null,
+            "position": 0,
+            "handlers": {},
+            "visible": true
+        },
+        "c0f99a9e-5004-4e75-a6c6-36f17490b134": {
+            "id": "c0f99a9e-5004-4e75-a6c6-36f17490b134",
+            "type": "page",
+            "content": {
+                "pageMode": "compact",
+                "emptinessColor": "#e9eef1",
+                "key": "search"
+            },
+            "parentId": "root",
+            "position": 0,
+            "handlers": {},
+            "visible": true
+        },
+        "bebc5fe9-63a7-46a7-b0fa-62303555cfaf": {
+            "id": "bebc5fe9-63a7-46a7-b0fa-62303555cfaf",
+            "type": "header",
+            "content": {
+                "text": "reSearchable"
+            },
+            "parentId": "c0f99a9e-5004-4e75-a6c6-36f17490b134",
+            "position": 0,
+            "handlers": {},
+            "visible": true
+        },
+        "806780cb-aa8b-4c7b-92f0-9a500f3255c6": {
+            "id": "806780cb-aa8b-4c7b-92f0-9a500f3255c6",
+            "type": "section",
+            "content": {
+                "title": "",
+                "snapMode": "yes"
+            },
+            "parentId": "c0f99a9e-5004-4e75-a6c6-36f17490b134",
+            "position": 1,
+            "handlers": {},
+            "visible": true
+        },
+        "8b1141b1-13f1-4447-8491-84534cebf2d9": {
+            "id": "8b1141b1-13f1-4447-8491-84534cebf2d9",
+            "type": "textinput",
+            "content": {
+                "label": "Query",
+                "placeholder": "trump"
+            },
+            "parentId": "806780cb-aa8b-4c7b-92f0-9a500f3255c6",
+            "position": 0,
+            "binding": {
+                "eventType": "ss-change",
+                "stateRef": "query"
+            },
+            "visible": true
+        },
+        "8261dba2-4440-4261-b2a4-a0a41b630ff8": {
+            "id": "8261dba2-4440-4261-b2a4-a0a41b630ff8",
+            "type": "section",
+            "content": {
+                "title": "Click To Annotate",
+                "snapMode": "no"
+            },
+            "parentId": "c0f99a9e-5004-4e75-a6c6-36f17490b134",
+            "position": 2,
+            "handlers": {},
+            "visible": true
+        },
+        "8d478de6-44c2-4389-8c4e-7ad3454321cd": {
+            "id": "8d478de6-44c2-4389-8c4e-7ad3454321cd",
+            "type": "button",
+            "content": {
+                "text": "Search this!"
+            },
+            "parentId": "806780cb-aa8b-4c7b-92f0-9a500f3255c6",
+            "position": 1,
+            "handlers": {
+                "click": "query"
+            },
+            "visible": true
+        },
+        "b0067bf1-7164-4f18-82bf-48b8eaabe928": {
+            "id": "b0067bf1-7164-4f18-82bf-48b8eaabe928",
+            "type": "repeater",
+            "content": {
+                "repeaterObject": "@{query_results}",
+                "keyVariable": "itemId",
+                "valueVariable": "item"
+            },
+            "parentId": "8261dba2-4440-4261-b2a4-a0a41b630ff8",
+            "position": 0,
+            "handlers": {},
+            "visible": true
+        },
+        "f13eacdb-99a4-4860-a218-af97358f0bda": {
+            "id": "f13eacdb-99a4-4860-a218-af97358f0bda",
+            "type": "columns",
+            "content": {},
+            "parentId": "b0067bf1-7164-4f18-82bf-48b8eaabe928",
+            "position": 0,
+            "handlers": {},
+            "visible": true
+        },
+        "6eb72546-8029-40fb-a7cf-9728a5f9fe7f": {
+            "id": "6eb72546-8029-40fb-a7cf-9728a5f9fe7f",
+            "type": "column",
+            "content": {
+                "title": "@{item.title}",
+                "width": "1"
+            },
+            "parentId": "f13eacdb-99a4-4860-a218-af97358f0bda",
+            "position": 0,
+            "handlers": {},
+            "visible": true
+        },
+        "2b7390d5-a788-4fbf-a36d-486881cd9af3": {
+            "id": "2b7390d5-a788-4fbf-a36d-486881cd9af3",
+            "type": "column",
+            "content": {
+                "title": "",
+                "width": "4"
+            },
+            "parentId": "f13eacdb-99a4-4860-a218-af97358f0bda",
+            "position": 1,
+            "handlers": {},
+            "visible": true
+        },
+        "4bd25fda-5cfd-4cf4-8510-e6ee02f9cc12": {
+            "id": "4bd25fda-5cfd-4cf4-8510-e6ee02f9cc12",
+            "type": "text",
+            "content": {
+                "text": "@{item.publication}"
+            },
+            "parentId": "6eb72546-8029-40fb-a7cf-9728a5f9fe7f",
+            "position": 0,
+            "handlers": {}
+        },
+        "4c7c06d8-3b7a-45b4-bf11-7edb3ff55923": {
+            "id": "4c7c06d8-3b7a-45b4-bf11-7edb3ff55923",
+            "type": "button",
+            "content": {
+                "text": "Annotate"
+            },
+            "parentId": "6eb72546-8029-40fb-a7cf-9728a5f9fe7f",
+            "position": 1,
+            "handlers": {
+                "click": "$goToPage_annotate"
+            },
+            "visible": true
+        },
+        "f1354f6d-ce10-4128-92ee-62356b687132": {
+            "id": "f1354f6d-ce10-4128-92ee-62356b687132",
+            "type": "text",
+            "content": {
+                "text": "@{item.truncated_content}"
+            },
+            "parentId": "2b7390d5-a788-4fbf-a36d-486881cd9af3",
+            "position": 0,
+            "handlers": {
+                "click": "payload_inspector"
+            },
+            "visible": true
+        },
+        "eae4fae9-0b22-4c96-b0a3-53e2c89229b1": {
+            "id": "eae4fae9-0b22-4c96-b0a3-53e2c89229b1",
+            "type": "page",
+            "content": {
+                "key": "annotate"
+            },
+            "parentId": "root",
+            "position": 1,
+            "handlers": {},
+            "visible": true
+        },
+        "13bc9427-e067-4e6b-9b59-f75f4d5f0dec": {
+            "id": "13bc9427-e067-4e6b-9b59-f75f4d5f0dec",
+            "type": "columns",
+            "content": {},
+            "parentId": "eae4fae9-0b22-4c96-b0a3-53e2c89229b1",
+            "position": 1,
+            "handlers": {},
+            "visible": true
+        },
+        "b1d208d8-bb75-4891-84a4-eb6baabe999f": {
+            "id": "b1d208d8-bb75-4891-84a4-eb6baabe999f",
+            "type": "column",
+            "content": {
+                "title": "@{article_title}",
+                "width": "4"
+            },
+            "parentId": "13bc9427-e067-4e6b-9b59-f75f4d5f0dec",
+            "position": 0,
+            "handlers": {},
+            "visible": true
+        },
+        "2fb0a380-12e5-4cb1-9217-66c248f5a6b4": {
+            "id": "2fb0a380-12e5-4cb1-9217-66c248f5a6b4",
+            "type": "column",
+            "content": {
+                "title": "",
+                "width": "2"
+            },
+            "parentId": "13bc9427-e067-4e6b-9b59-f75f4d5f0dec",
+            "position": 1,
+            "handlers": {},
+            "visible": true
+        },
+        "cf4f86e8-1325-43b7-912e-7b53627f75fd": {
+            "id": "cf4f86e8-1325-43b7-912e-7b53627f75fd",
+            "type": "text",
+            "content": {
+                "text": "@{article_title}"
+            },
+            "parentId": "b1d208d8-bb75-4891-84a4-eb6baabe999f",
+            "position": 0,
+            "handlers": {},
+            "visible": true
+        },
+        "99c19695-8917-48f3-8fe5-169d97fb737f": {
+            "id": "99c19695-8917-48f3-8fe5-169d97fb737f",
+            "type": "text",
+            "content": {
+                "text": "@{article_publication}"
+            },
+            "parentId": "b1d208d8-bb75-4891-84a4-eb6baabe999f",
+            "position": 1,
+            "handlers": {},
+            "visible": true
+        },
+        "8425f5b4-0455-4ad7-ab51-0c15511faacc": {
+            "id": "8425f5b4-0455-4ad7-ab51-0c15511faacc",
+            "type": "text",
+            "content": {
+                "text": "@{article_text}"
+            },
+            "parentId": "b1d208d8-bb75-4891-84a4-eb6baabe999f",
+            "position": 2,
+            "handlers": {},
+            "visible": true
+        },
+        "071342b0-a60c-437d-b8fd-3ce4b0abe41d": {
+            "id": "071342b0-a60c-437d-b8fd-3ce4b0abe41d",
+            "type": "textareainput",
+            "content": {
+                "label": "Notes",
+                "rows": "5"
+            },
+            "parentId": "2fb0a380-12e5-4cb1-9217-66c248f5a6b4",
+            "position": 0,
+            "handlers": {},
+            "binding": {
+                "eventType": "ss-change",
+                "stateRef": "notes"
+            },
+            "visible": true
+        },
+        "f83db516-e209-463c-b7ec-166b041e0d8c": {
+            "id": "f83db516-e209-463c-b7ec-166b041e0d8c",
+            "type": "button",
+            "content": {
+                "text": "Auto Populate"
+            },
+            "parentId": "2fb0a380-12e5-4cb1-9217-66c248f5a6b4",
+            "position": 1,
+            "handlers": {
+                "click": "auto_notes"
+            },
+            "visible": true
+        },
+        "25515cbd-a5e7-43a1-818a-4fb0e8879bb9": {
+            "id": "25515cbd-a5e7-43a1-818a-4fb0e8879bb9",
+            "type": "button",
+            "content": {
+                "text": "Auto Populate"
+            },
+            "parentId": "2fb0a380-12e5-4cb1-9217-66c248f5a6b4",
+            "position": 3,
+            "handlers": {
+                "click": "auto_tag"
+            },
+            "visible": true
+        },
+        "ff97e07e-d028-42bf-b54a-74cd60c9fd57": {
+            "id": "ff97e07e-d028-42bf-b54a-74cd60c9fd57",
+            "type": "button",
+            "content": {
+                "text": "Auto Populate"
+            },
+            "parentId": "2fb0a380-12e5-4cb1-9217-66c248f5a6b4",
+            "position": 5,
+            "handlers": {
+                "click": "auto_people"
+            },
+            "visible": true
+        },
+        "e90e7600-7923-4225-9381-691b42fff1db": {
+            "id": "e90e7600-7923-4225-9381-691b42fff1db",
+            "type": "button",
+            "content": {
+                "text": "Auto Populate"
+            },
+            "parentId": "2fb0a380-12e5-4cb1-9217-66c248f5a6b4",
+            "position": 7,
+            "handlers": {
+                "click": "auto_orgs"
+            },
+            "visible": true
+        },
+        "a2416157-d2da-4a66-86b9-490b5309aabd": {
+            "id": "a2416157-d2da-4a66-86b9-490b5309aabd",
+            "type": "button",
+            "content": {
+                "text": "Auto Populate"
+            },
+            "parentId": "2fb0a380-12e5-4cb1-9217-66c248f5a6b4",
+            "position": 9,
+            "handlers": {
+                "click": "auto_places"
+            },
+            "visible": true
+        },
+        "54818da2-6198-49e5-9ea2-49ca3e6c8a1d": {
+            "id": "54818da2-6198-49e5-9ea2-49ca3e6c8a1d",
+            "type": "button",
+            "content": {
+                "text": "Go to Notes"
+            },
+            "parentId": "bebc5fe9-63a7-46a7-b0fa-62303555cfaf",
+            "position": 0,
+            "handlers": {
+                "click": "$goToPage_annotate"
+            },
+            "visible": true
+        },
+        "3ffcf0c1-74ac-4a8c-bd65-901b40b17187": {
+            "id": "3ffcf0c1-74ac-4a8c-bd65-901b40b17187",
+            "type": "header",
+            "content": {
+                "text": "Notes and Annotations"
+            },
+            "parentId": "eae4fae9-0b22-4c96-b0a3-53e2c89229b1",
+            "position": 0,
+            "handlers": {},
+            "visible": true
+        },
+        "b196161e-1f6b-4ef6-aa22-84957b6ae522": {
+            "id": "b196161e-1f6b-4ef6-aa22-84957b6ae522",
+            "type": "button",
+            "content": {
+                "text": "Go to Search"
+            },
+            "parentId": "3ffcf0c1-74ac-4a8c-bd65-901b40b17187",
+            "position": 0,
+            "handlers": {
+                "click": "$goToPage_search"
+            },
+            "visible": true
+        },
+        "aa3d3e08-3143-4c76-ac27-7c5d7371101b": {
+            "id": "aa3d3e08-3143-4c76-ac27-7c5d7371101b",
+            "type": "textareainput",
+            "content": {
+                "label": "Tags",
+                "rows": "5"
+            },
+            "parentId": "2fb0a380-12e5-4cb1-9217-66c248f5a6b4",
+            "position": 2,
+            "handlers": {},
+            "binding": {
+                "eventType": "ss-change",
+                "stateRef": "notes_tags"
+            },
+            "visible": true
+        },
+        "a8a2df9a-bba3-4ed4-8bc0-32d302c1c6e6": {
+            "id": "a8a2df9a-bba3-4ed4-8bc0-32d302c1c6e6",
+            "type": "textareainput",
+            "content": {
+                "label": "People",
+                "rows": "4"
+            },
+            "parentId": "2fb0a380-12e5-4cb1-9217-66c248f5a6b4",
+            "position": 4,
+            "handlers": {},
+            "binding": {
+                "eventType": "ss-change",
+                "stateRef": "notes_people"
+            },
+            "visible": true
+        },
+        "49314790-cfd6-436d-a379-6f522001cbbf": {
+            "id": "49314790-cfd6-436d-a379-6f522001cbbf",
+            "type": "textareainput",
+            "content": {
+                "label": "Organizations",
+                "rows": "5"
+            },
+            "parentId": "2fb0a380-12e5-4cb1-9217-66c248f5a6b4",
+            "position": 6,
+            "handlers": {},
+            "binding": {
+                "eventType": "ss-change",
+                "stateRef": "notes_orgs"
+            },
+            "visible": true
+        },
+        "8592facc-2b2b-4020-ae15-0702a8616b62": {
+            "id": "8592facc-2b2b-4020-ae15-0702a8616b62",
+            "type": "textareainput",
+            "content": {
+                "label": "Places",
+                "rows": "5"
+            },
+            "parentId": "2fb0a380-12e5-4cb1-9217-66c248f5a6b4",
+            "position": 8,
+            "handlers": {},
+            "binding": {
+                "eventType": "ss-change",
+                "stateRef": "notes_places"
+            },
+            "visible": true
+        },
+        "6b2a83ef-6dac-4abc-aab3-15a20f0ce544": {
+            "id": "6b2a83ef-6dac-4abc-aab3-15a20f0ce544",
+            "type": "textareainput",
+            "content": {
+                "label": "Dates and Times",
+                "rows": "5"
+            },
+            "parentId": "2fb0a380-12e5-4cb1-9217-66c248f5a6b4",
+            "position": 10,
+            "handlers": {},
+            "binding": {
+                "eventType": "ss-change",
+                "stateRef": "notes_dates"
+            },
+            "visible": true
+        },
+        "5979a45b-5cfd-430e-842f-1308114d878a": {
+            "id": "5979a45b-5cfd-430e-842f-1308114d878a",
+            "type": "button",
+            "content": {
+                "text": "Auto Populate"
+            },
+            "parentId": "2fb0a380-12e5-4cb1-9217-66c248f5a6b4",
+            "position": 11,
+            "handlers": {
+                "click": "auto_dates"
+            },
+            "visible": true
+        }
+    }
+}
