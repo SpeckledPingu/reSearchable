@@ -1,0 +1,20 @@
+{"document_index":{"name": "news",
+  "fields": [{"name": "link", "type": "string"},
+    {"name": "headline", "type": "string"},
+    {"name": "category", "type": "string"},
+    {"name": "short_description", "type": "string"},
+    {"name": "authors", "type": "string"},
+    {"name": "date", "type": "string"}]},
+  "note_index":{
+    "name": "notes",
+    "fields": [
+      {"name": "document", "type": "string"},
+      {"name": "notes", "type": "string"},
+      {"name": "people", "type": "string[]", "facet":true},
+      {"name": "places", "type": "string[]", "facet":true},
+      {"name": "orgs", "type": "string[]", "facet":true},
+      {"name": "tags", "type": "string[]", "facet":true},
+      {"name": "dates", "type": "string[]", "facet":true}
+    ]
+  }
+}

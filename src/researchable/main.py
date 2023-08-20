@@ -4,6 +4,12 @@ import json
 import numpy as np
 import requests
 import spacy
+from typesense import Client
+from sentence_transformers import SentenceTransformer
+
+import sys
+sys.path.append("../ingestion")
+from ..ingestion.index import QueryIndexTypesense
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -13,17 +19,31 @@ nlp = spacy.load("en_core_web_sm")
 
 # Shows in the log when the app starts
 print("Hello world!")
+client = Client({
+    'nodes': [{
+        'host': 'localhost', # For Typesense Cloud use xxx.a1.typesense.net
+        'port': '8108',      # For Typesense Cloud use 443
+        'protocol': 'http'   # For Typesense Cloud use https
+    }],
+    'api_key': 'xyz',
+    'connection_timeout_seconds': 5
+})
+
+index = QueryIndexTypesense(client=client, embedding_column='doc_vec',
+                            vector_index='news', fts_index='news',
+                            encoder=SentenceTransformer('all-MiniLM-L6-v2'))
 
 def query(state):
     query = state['query']
-    results = requests.get('http://localhost:10100/query/sparse',
-                            params={'query':query})
-    results = json.loads(results.text)
+    # results = requests.get('http://localhost:10100/query/sparse',
+    #                         params={'query':query})
+    results = index.search(query, top_k_fts=100, top_k_vector=100)
+    # results = json.loads(results.text)
     print(results[0].keys())
     results = {str(i):_values for i, _values in enumerate(results[:5])}
     for k, v in results.items():
-        v['truncated_content'] = v['content'][:1000] + '...'
-    state['query_results'] = results
+        v['truncated_content'] = v['full_text'][:1000] + '...'
+    state['query_results'] = results.to_dict(orient='records')
     print(results.keys())
 def _display_results(state, context):
     pass
