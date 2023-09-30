@@ -7,6 +7,7 @@
     {"name": "statement_date", "type": "string"},
     {"name": "text", "type": "string"},
     {"name": "tags", "type": "string[]", "facet": true},
+    {"name": "section", "type": "int32", "facet": true},
     {"name": "vec", "type": "float[]","num_dim": 384}]},
   "note_index":{
     "name": "notes",

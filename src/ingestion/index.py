@@ -5,7 +5,8 @@ from pathlib import Path
 import pandas as pd
 
 class QueryIndexTypesense():
-    def __init__(self, vector_index, fts_index, client, embedding_column, encoder, search_fields, id_column='id'):
+    def __init__(self, vector_index, fts_index, client, embedding_column, encoder, search_fields,
+                 id_column='id', rrf_kl=60, rrf_kd=60):
         self.vector_index = vector_index
         self.fts_index = fts_index
         # self.data = data
@@ -14,6 +15,8 @@ class QueryIndexTypesense():
         self.client = client
         self.search_fields = search_fields
         self.id_column = id_column
+        self.rrf_kl = rrf_kl
+        self.rrf_kd = rrf_kd
 
     def format_fts_response(self, docs, columns=None):
         search_ids = dict()
@@ -83,8 +86,8 @@ class QueryIndexTypesense():
         overlap_ids = list(vector_overlap.keys())
         hybrid_rank = dict()
         for id in overlap_ids:
-            vector_position = 1 / vector_overlap[id]
-            fts_position = 1 / fts_overlap[id]
+            vector_position = 1 / (self.rrf_kd + vector_overlap[id])
+            fts_position = 1 / (self.rrf_kl + fts_overlap[id])
             hybrid_rank[id] = vector_position * vector_weight + fts_position * fts_weight
 
         hybrid_rank = [(k,v) for k,v in hybrid_rank.items()]

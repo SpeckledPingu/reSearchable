@@ -19,4 +19,10 @@ class TypesenseNote():
         results = self.searcher.search(query, top_k_fts=100, top_k_vector=100)
         return results
 
+    def search_note_fts(self, query, fields=None, top_k=10):
+        if fields is None:
+            fields = self.search_fields
+        results = self.searcher.search_bm25(query, fields=fields, top_k=top_k)
+        return results
+
 

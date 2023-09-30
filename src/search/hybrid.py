@@ -42,7 +42,7 @@ class HybridRerank():
         # modified reranking formula
         return opa_rank(subjective_col, objective_col, **self.opa_params)
 
-class HybridSearch():
+class OpaRankSearch():
     def __init__(self, index, top_n=10, join_method='inner',
                  a=0.5, b=0.5, c=1, a_e=1, b_e=1, c_e=1,a_k=20, b_k=20):
         self.index = index
@@ -87,3 +87,48 @@ class HybridSearch():
 
     def return_results(self):
         pass
+
+
+class LinearHybridSearch():
+    def __init__(self, index, top_n=10, join_method='inner',
+                 alpha=0.5, fts_min=0, fts_max=1000000):
+        self.index = index
+        self.fts_min = fts_min
+        self.fts_max = fts_max
+        self.fts_denominator = fts_max - fts_min
+        self.alpha = alpha
+        self.top_n = top_n
+        self.join_method = join_method
+
+    def sparse_results(self):
+        pass
+
+    def dense_results(self):
+        # Apply ranks to the dense score
+        # keep top k results for merging
+        pass
+
+    def merge_results(self, sparse_results, dense_results):
+        # Join results on key
+        if self.join_method == 'inner':
+            # inner join on ids
+            results = pd.merge(sparse_results, dense_results, how='inner')
+        else:
+            # outer join on ids
+            results = pd.merge(sparse_results, dense_results, how='outer')
+
+        for record in results:
+            record['linear_rerank'] = self._opa_rank(record['score'],record['dense_rank'])
+        results = sorted(results, key=lambda x: x['opa_rank'])
+        return results
+
+    def _linear_rank(self, subjective_col, objective_col):
+        objective_col = self.alpha * objective_col
+        subjective_col = (1 - self.alpha)*( (subjective_col - self.fts_min) / self.fts_denominator )
+
+        return subjective_col + objective_col
+
+    def return_results(self):
+        pass
+
+
