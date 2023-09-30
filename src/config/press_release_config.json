@@ -1,0 +1,23 @@
+{"document_index":{"name": "press_release",
+  "fields": [{"name": "release_link", "type": "string"},
+    {"name": "release_link-href", "type": "string"},
+    {"name": "statement_title", "type": "string"},
+    {"name": "statement_type", "type": "string"},
+    {"name": "statement_author", "type": "string"},
+    {"name": "statement_date", "type": "string"},
+    {"name": "text", "type": "string"},
+    {"name": "tags", "type": "string[]", "facet": true},
+    {"name": "text_vec", "type": "float[]","num_dim": 384}]},
+  "note_index":{
+    "name": "notes",
+    "fields": [
+      {"name": "document", "type": "string"},
+      {"name": "notes", "type": "string"},
+      {"name": "people", "type": "string[]", "facet":true},
+      {"name": "places", "type": "string[]", "facet":true},
+      {"name": "orgs", "type": "string[]", "facet":true},
+      {"name": "tags", "type": "string[]", "facet":true},
+      {"name": "dates", "type": "string[]", "facet":true}
+    ]
+  }
+}

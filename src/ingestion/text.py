@@ -4,8 +4,8 @@ from pathlib import Path
 from sentence_transformers import SentenceTransformer
 
 class JSONLoader():
-    def __int__(self, folder: str, text_columns: list, index,
-                ending='csv', batch_size=10, vectorizer=None):
+    def __init__(self, folder: str, text_columns: list, index,
+                ending='json', batch_size=10, vectorizer=None):
         self.folder = Path(folder)
         self.files = sorted(list(self.folder.glob(f'*.{ending}')))
         self.vectorizer = vectorizer if vectorizer is not None else SentenceTransformer('all-MiniLM-L6-v2')
@@ -23,13 +23,13 @@ class JSONLoader():
                 for col in self.text_columns:
                     vecs = self.vectorizer.encode([record[col] for record in batch])
                     for record, vec in zip(batch, vecs):
-                        batch[f'{col}_vec'] = vec
+                        record[f'{col}_vec'] = vec.tolist()
 
-                self.index.index_documents(batch)
+                self.index.load_data(batch)
 
 
 class CSVLoader():
-    def __int__(self, folder: str, text_columns: list, index,
+    def __init__(self, folder: str, text_columns: list, index,
                 ending='csv', batch_size=10, vectorizer=None):
         self.folder = Path(folder)
         self.files = sorted(list(self.folder.glob(f'*.{ending}')))

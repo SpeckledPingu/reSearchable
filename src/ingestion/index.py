@@ -5,7 +5,7 @@ from pathlib import Path
 import pandas as pd
 
 class QueryIndexTypesense():
-    def __init__(self, vector_index, fts_index, client, embedding_column, encoder, search_fields):
+    def __init__(self, vector_index, fts_index, client, embedding_column, encoder, search_fields, id_column='id'):
         self.vector_index = vector_index
         self.fts_index = fts_index
         # self.data = data
@@ -13,6 +13,7 @@ class QueryIndexTypesense():
         self.encoder = encoder
         self.client = client
         self.search_fields = search_fields
+        self.id_column = id_column
 
     def format_fts_response(self, docs, columns=None):
         search_ids = dict()
@@ -20,9 +21,9 @@ class QueryIndexTypesense():
 
         print(f'number of fts docs: {len(docs)}')
         for position, doc in enumerate(docs, start=1):
-            url = doc['document']['url']
-            search_ids[url] = position
-            search_results[url] = doc['document']
+            id = doc['document']['id']
+            search_ids[id] = position
+            search_results[id] = doc['document']
 
         return search_ids, search_results
 
@@ -31,9 +32,9 @@ class QueryIndexTypesense():
         search_results = dict()
         print(f'number of vector docs: {len(docs)}')
         for position, doc in enumerate(docs, start=1):
-            url = doc['document']['url']
-            search_ids[url] = position
-            search_results[url] = doc['document']
+            id = doc['document']['id']
+            search_ids[id] = position
+            search_results[id] = doc['document']
 
         return search_ids, search_results
 
@@ -52,7 +53,7 @@ class QueryIndexTypesense():
         return search_ids, search_results
 
     def search_vector(self, query, top_k=10):
-        query_vec = ', '.join([str(x) for x in self.encoder.encode(query)])
+        query_vec = ','.join([str(x) for x in self.encoder.encode(query)])
 
         search_requests = {
             'searches': [
@@ -73,6 +74,7 @@ class QueryIndexTypesense():
 
     def find_overlap(self, vector_ids, fts_ids):
         overlap = set(vector_ids.keys()).intersection(set(fts_ids.keys()))
+        print(overlap)
         vector_overlap = {id:position for id, position in vector_ids.items() if id in overlap}
         fts_overlap = {id:position for id, position in fts_ids.items() if id in overlap}
         return vector_overlap, fts_overlap
@@ -80,10 +82,10 @@ class QueryIndexTypesense():
     def rrf_reranking(self, vector_overlap, fts_overlap, fts_weight=1, vector_weight=1):
         overlap_ids = list(vector_overlap.keys())
         hybrid_rank = dict()
-        for url in overlap_ids:
-            vector_position = 1 / vector_overlap[url]
-            fts_position = 1 / fts_overlap[url]
-            hybrid_rank[url] = vector_position * vector_weight + fts_position * fts_weight
+        for id in overlap_ids:
+            vector_position = 1 / vector_overlap[id]
+            fts_position = 1 / fts_overlap[id]
+            hybrid_rank[id] = vector_position * vector_weight + fts_position * fts_weight
 
         hybrid_rank = [(k,v) for k,v in hybrid_rank.items()]
         hybrid_rank = sorted(hybrid_rank, key=lambda x: x[1])[::-1]
@@ -115,7 +117,7 @@ class TypesenseIndexer():
         self.index_name = index_name
         self._check_indexes()
     def _check_indexes(self):
-        collections = self.client.retrieve()
+        collections = self.client.collections.retrieve()
         collections = [collection['name'] for collection in collections]
         if self.index_config['name'] not in collections:
             self._create_index()
@@ -129,12 +131,15 @@ class TypesenseIndexer():
 
     def index_documents(self, documents):
         for file in self.data_folder:
-            if file.suffix == 'json':
+            if file.suffix == '.json':
                 with open(file,'r') as f:
-                    documents = [x.strip('\n') for x in f.readlines()]
+                    documents = json.load(f)
+                    print(file)
+                    print(len(documents))
+                    # documents = [x.strip('\n') for x in f.readlines()]
                     self.load_data(documents)
 
-            elif file.suffix == 'csv':
+            elif file.suffix == '.csv':
                 documents = pd.read_csv(file)
                 documents = documents.to_dict(orient='records')
                 self.load_data(documents)
