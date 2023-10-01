@@ -9,7 +9,7 @@ from sentence_transformers import SentenceTransformer
 
 import sys
 sys.path.append("../ingestion")
-from ..ingestion.index import QueryIndexTypesense
+from index import QueryIndexTypesense
 
 nlp = spacy.load("en_core_web_sm")
 
@@ -29,15 +29,32 @@ client = Client({
     'connection_timeout_seconds': 5
 })
 
-index = QueryIndexTypesense(client=client, embedding_column='doc_vec',
-                            vector_index='news', fts_index='news',
-                            encoder=SentenceTransformer('all-MiniLM-L6-v2'))
+with open('configs/index_config.json','r') as f:
+    configs = json.load(f)
+
+document_config = configs['document_index']
+note_config = configs['note_index']
+
+document_index = QueryIndexTypesense(client=client,
+                                     embedding_column=document_config['embedding_column'],
+                                     vector_index=document_config['vector_index'],
+                                     fts_index=document_config['fts_index'],
+                                     encoder=SentenceTransformer(document_config['embedding_llm']),
+                                     search_fields=document_config['search_fields'])
+
+note_index =  QueryIndexTypesense(client=client,
+                                  embedding_column=note_config['embedding_column'],
+                                  vector_index=note_config['vector_index'],
+                                  fts_index=note_config['fts_index'],
+                                  encoder=SentenceTransformer(note_config['embedding_llm']),
+                                  search_fields=note_config['search_fields'])
 
 def query(state):
+    # Todo: Add button to allow fts, vector, or hybrid search
     query = state['query']
     # results = requests.get('http://localhost:10100/query/sparse',
     #                         params={'query':query})
-    results = index.search(query, top_k_fts=100, top_k_vector=100)
+    results = document_index.search(query, top_k_fts=100, top_k_vector=100)
     # results = json.loads(results.text)
     print(results[0].keys())
     results = {str(i):_values for i, _values in enumerate(results[:5])}
@@ -45,12 +62,23 @@ def query(state):
         v['truncated_content'] = v['full_text'][:1000] + '...'
     state['query_results'] = results.to_dict(orient='records')
     print(results.keys())
+
+
+note_fields = ['notes','notes_tags','notes_people','notes_places','notes_orgs','notes_dates']
+def add_note(state):
+    note_document = dict()
+    for field in note_fields:
+        note_document[field] = state[field]
+    client.collections['notes'].documents.create(note_document)
+    clear_notes(state)
+    
 def _display_results(state, context):
     pass
-
+        
 def clear_notes(state):
     # clears all the note fields
-    pass
+    for field in note_fields:
+        state[field] = ''
 
 def auto_notes(state):
     # call llm to summarize
@@ -142,6 +170,6 @@ initial_state = ss.init_state({
     'ner_url':'localhost:10101',
     'ner_endpoint':'/extract_all',
     'query':'',
-    'query_results':{'0':{'content':' ','title':' ','publication':' '}}
+    'query_results':{'0':{'text':' ','statement_title':' '}}
 })
 

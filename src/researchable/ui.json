@@ -371,7 +371,7 @@
             "id": "aa3d3e08-3143-4c76-ac27-7c5d7371101b",
             "type": "textareainput",
             "content": {
-                "label": "Tags",
+                "label": "Keyphrases",
                 "rows": "5"
             },
             "parentId": "2fb0a380-12e5-4cb1-9217-66c248f5a6b4",

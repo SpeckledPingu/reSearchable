@@ -17,6 +17,7 @@
       {"name": "places", "type": "string[]", "facet":true},
       {"name": "orgs", "type": "string[]", "facet":true},
       {"name": "tags", "type": "string[]", "facet":true},
+      {"name": "keyphrases", "type": "string[]", "facet": true},
       {"name": "dates", "type": "string[]", "facet":true}
     ]
   }

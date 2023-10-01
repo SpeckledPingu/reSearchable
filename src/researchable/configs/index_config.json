@@ -1,0 +1,33 @@
+{
+  "document_index": {
+    "vector_index": "press_release",
+    "fts_index": "press_release",
+    "embedding_column": "vec",
+    "embedding_llm": "all-MiniLM-L6-v2",
+    "search_fields": "text,tags,title"
+  },
+  "client_connection":
+  {
+    "nodes": [{
+      "host": "localhost",
+      "port": "8108",
+      "protocol": "http"
+    }],
+    "api_key": "xyz",
+    "connection_timeout_seconds": 5
+  },
+  "note_index": {
+    "vector_index": "notes",
+    "fts_index": "notes",
+    "embedding_column": "vec",
+    "embedding_llm": "all-MiniLM-L6-v2",
+    "search_fields": "document,notes,tags",
+    "document_field": "document",
+    "tag_field": "tags",
+    "people_field": "people",
+    "organization_field": "orgs",
+    "places_field": "places",
+    "notes_field": "notes",
+    "dates_field": "dates"
+  }
+}
