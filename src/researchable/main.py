@@ -22,7 +22,7 @@ print("Hello world!")
 client = Client({
     'nodes': [{
         'host': 'localhost', # For Typesense Cloud use xxx.a1.typesense.net
-        'port': '8108',      # For Typesense Cloud use 443
+        'port': '8109',      # For Typesense Cloud use 443
         'protocol': 'http'   # For Typesense Cloud use https
     }],
     'api_key': 'xyz',
@@ -54,21 +54,39 @@ def query(state):
     query = state['query']
     # results = requests.get('http://localhost:10100/query/sparse',
     #                         params={'query':query})
-    results = document_index.search(query, top_k_fts=100, top_k_vector=100)
-    # results = json.loads(results.text)
-    print(results[0].keys())
-    results = {str(i):_values for i, _values in enumerate(results[:5])}
-    for k, v in results.items():
-        v['truncated_content'] = v['full_text'][:1000] + '...'
-    state['query_results'] = results.to_dict(orient='records')
-    print(results.keys())
+    print(query)
+    results = document_index.search_bm25(query, fields='text', include_fields='id,text,statement_title,tags')
+    print(results[0])
+    sort_keys = sorted([(position,docid) for docid,position in results[0].items()])
+    results_content = results[1]
+    # results = {str(i):_values for i, _values in enumerate(results[:5])}
+    display_results = list()
+    for position, docid in sort_keys:
+        _tmp = results_content[docid]
+        _tmp['truncated_content'] = _tmp['text'][:1000] + '...'
+        display_results.append(_tmp)
+    state['query_results'] = display_results
+    print(display_results)
+
+    # for k, v in results.items():
+    #     v['truncated_content'] = v['text'][:1000] + '...'
+    # state['query_results'] = results#.to_dict(orient='records')
+    # print(results)
 
 
-note_fields = ['notes','notes_tags','notes_people','notes_places','notes_orgs','notes_dates']
+note_fields = ['notes','notes_keyphrases','notes_people','notes_places','notes_orgs','notes_dates']
 def add_note(state):
     note_document = dict()
-    for field in note_fields:
-        note_document[field] = state[field]
+    note_document['notes'] = state['notes']
+    for field in note_fields[1:]:
+        if state[field] is None:
+            note_document[field[6:]] = ''
+        else:
+            note_document[field[6:]] = state[field].split(', ')
+    # note_document['keyphrases'] = note_document['keyphrases'].split(', ')
+    note_document['document'] = state['article_text']
+    note_document['tags'] = state['article_tags']
+    print(note_document)
     client.collections['notes'].documents.create(note_document)
     clear_notes(state)
     
@@ -82,15 +100,15 @@ def clear_notes(state):
 
 def auto_notes(state):
     # call llm to summarize
-    results = requests.post('http://localhost:10101/ask/summary',  params={'doc':state['article_text']})
+    results = requests.post('http://localhost:8000/ask/summary',  json={'doc':state['article_text']})
     print(results.text)
     state['notes'] = json.loads(results.text)['summary']
 
 def auto_tag(state):
     # call keybert to extract keyphrases
-    results = requests.post('http://localhost:10101/ask/tag',  params={'doc':state['article_text']})
+    results = requests.post('http://localhost:8000/ask/tag',  json={'doc':state['article_text']})
     print(results.text)
-    state['notes_tags'] = ', '.join(json.loads(results.text)['tags'])
+    state['notes_keyphrases'] = ', '.join(json.loads(results.text)['keyphrases'])
 
 def auto_people(state):
     # call spacy to NER people
@@ -139,9 +157,19 @@ def auto_dates(state):
 def payload_inspector(state, context):
     # Shown every time the event handler is executed
     # print("Payload: " + repr(context))
-    state['article_title'] = context['item']['title']
-    state['article_publication'] = context['item']['publication']
-    state['article_text'] = context['item']['content']
+    print(context)
+    state['article_title'] = ''
+    state['article_text'] = ''
+    state['article_tags'] = ''
+    document_id = context['item']['id']
+    doc = document_index.single_doc_retrieval(document_id)
+    print(doc['id'])
+    print(document_id)
+    # state['article_title'] = context['item']['statement_title']
+    # print(context)
+    state['article_tags'] = context['item']['tags']
+    state['article_title'] = doc['statement_title']
+    state['article_text'] = doc['text']
     state.set_page("annotate")
 
 # The following code will set the value of product_id

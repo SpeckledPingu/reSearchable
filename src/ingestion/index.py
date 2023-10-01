@@ -42,7 +42,7 @@ class QueryIndexTypesense():
         return search_ids, search_results
 
 
-    def search_bm25(self, query, fields=None, top_k=10):
+    def search_bm25(self, query, fields=None, include_fields=None, top_k=10):
         if fields is None:
             fields = self.search_fields
         fts_query = {
@@ -50,6 +50,8 @@ class QueryIndexTypesense():
             'query_by'  : fields,
             'per_page'  : top_k
         }
+        if include_fields is not None:
+            fts_query['include_fields'] = include_fields
 
         self.bm25_results = self.client.collections[f'{self.fts_index}'].documents.search(fts_query)
         search_ids, search_results = self.format_fts_response(self.bm25_results['hits'])
@@ -111,6 +113,9 @@ class QueryIndexTypesense():
         self.overlap_results = self.merge_parallel_indexes(vector_results, fts_results)
         return self.overlap_results
 
+    def single_doc_retrieval(self, docid):
+        doc = self.client.collections[self.fts_index].documents[f'{docid}'].retrieve()
+        return doc
 
 class TypesenseIndexer():
     def __init__(self, index_config, index_name, data_folder, client):

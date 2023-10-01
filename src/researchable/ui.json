@@ -140,7 +140,7 @@
             "id": "4bd25fda-5cfd-4cf4-8510-e6ee02f9cc12",
             "type": "text",
             "content": {
-                "text": "@{item.publication}"
+                "text": "@{item.statement_title}"
             },
             "parentId": "6eb72546-8029-40fb-a7cf-9728a5f9fe7f",
             "position": 0,
@@ -379,7 +379,7 @@
             "handlers": {},
             "binding": {
                 "eventType": "ss-change",
-                "stateRef": "notes_tags"
+                "stateRef": "notes_keyphrases"
             },
             "visible": true
         },
@@ -458,6 +458,32 @@
             "handlers": {
                 "click": "auto_dates"
             },
+            "visible": true
+        },
+        "2e806d07-623c-4aa8-a843-511f2bb83edc": {
+            "id": "2e806d07-623c-4aa8-a843-511f2bb83edc",
+            "type": "button",
+            "parentId": "3ffcf0c1-74ac-4a8c-bd65-901b40b17187",
+            "content": {
+                "text": "Clear Note Fields"
+            },
+            "handlers": {
+                "click": "clear_notes"
+            },
+            "position": 1,
+            "visible": true
+        },
+        "3d3f05df-e012-4383-a84f-3184f47d8393": {
+            "id": "3d3f05df-e012-4383-a84f-3184f47d8393",
+            "type": "button",
+            "parentId": "3ffcf0c1-74ac-4a8c-bd65-901b40b17187",
+            "content": {
+                "text": "Save Note"
+            },
+            "handlers": {
+                "click": "add_note"
+            },
+            "position": 2,
             "visible": true
         }
     }
