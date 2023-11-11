@@ -1,4 +1,4 @@
-# reSearchable
+# reSearchable - Updates coming soon after streamSearchable is in a good place
 Researchable is a toolkit for setting up local research and note taking for journalists, students, and anyone else who sifts through large amounts of data.
 
 Most research involves large amounts of text. This may be scraped text, pdfs, and other sources that need to be processed and then indexed into a flexible search engine.
